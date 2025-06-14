@@ -52,6 +52,10 @@ def delete_task(task_id: int):
     repo.delete_task(task_id)
     return RedirectResponse("/", status_code=303)
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
+
 
 @app.post("/projects/{project_id}/delete")
 def delete_project(project_id: int):
