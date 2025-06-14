@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>TODO App</title>
+    <link rel="stylesheet" href="/static/bootstrap.min.css" />
+</head>
+<body class="container mt-4">
+    <h1>TODO App</h1>
+
+    <!-- Добавление пользователя -->
+    <form method="post" action="/users/" class="mb-3">
+        <input type="text" name="name" placeholder="User Name" required class="form-control" />
+        <button class="btn btn-primary mt-2" type="submit">Add User</button>
+    </form>
+
+    <!-- Создание проекта -->
+    <form method="post" action="/projects/" class="mb-3">
+        <input type="text" name="title" placeholder="Project Title" required class="form-control" />
+        <select name="user_id" class="form-select mt-2" required>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.name }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-success mt-2" type="submit">Add Project</button>
+    </form>
+
+    <!-- Добавление задачи -->
+    <form method="post" action="/tasks/" class="mb-3">
+        <input type="text" name="description" placeholder="Task Description" required class="form-control" />
+        <select name="project_id" class="form-select mt-2" required>
+            {% for project in projects %}
+                <option value="{{ project.id }}">{{ project.title }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-info mt-2" type="submit">Add Task</button>
+    </form>
+
+    <!-- Список задач -->
+    <h3>Tasks</h3>
+    <ul class="list-group">
+        {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    {% if task.completed %}
+                        <s>{{ task.description }}</s>
+                    {% else %}
+                        {{ task.description }}
+                    {% endif %}
+                    <small class="text-muted">(Project ID: {{ task.project_id }})</small>
+                </div>
+                <div>
+                    {% if not task.completed %}
+                    <form method="post" action="/tasks/{{ task.id }}/complete" style="display:inline;">
+                        <button class="btn btn-sm btn-outline-success" type="submit">✓</button>
+                    </form>
+                    {% endif %}
+                    <form method="post" action="/tasks/{{ task.id }}/delete" style="display:inline;">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">🗑</button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
